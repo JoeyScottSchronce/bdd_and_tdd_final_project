@@ -30,6 +30,7 @@ from decimal import Decimal
 from service.models import Product, Category, db
 from service import app
 from tests.factories import ProductFactory
+from factory.fuzzy import FuzzyChoice
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -106,32 +107,32 @@ class TestProductModel(unittest.TestCase):
     #
 
     def test_read_a_product(self):
-        """It should read a product"""
+        """It should Read a Product"""
         product = ProductFactory()
-        logger.info(product)
         product.id = None
         product.create()
-        self.assertIsNotNone(product_id)
-        found_product = Product.find(product_id)
+        self.assertIsNotNone(product.id)
+        # Fetch it back
+        found_product = Product.find(product.id)
         self.assertEqual(found_product.id, product.id)
         self.assertEqual(found_product.name, product.name)
         self.assertEqual(found_product.description, product.description)
         self.assertEqual(found_product.price, product.price)
 
-   def test_update_a_product(self):
+    def test_update_a_product(self):
         """It should Update a Product"""
         product = ProductFactory()
         product.id = None
         product.create()
         self.assertIsNotNone(product.id)
 
-        product.description = "This is a new discription"
+        product.description = "This is a new description"
         original_id = product.id
         product.update()
         self.assertEqual(product.id, original_id)
-        self.assertEqual(product.description, "This is a new discription")
+        self.assertEqual(product.description, "This is a new description")
 
         products = Product.all()
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].id, original_id)
-        self.assertEqual(products[0].description, "This is a new discription")
+        self.assertEqual(products[0].description, "This is a new description")
