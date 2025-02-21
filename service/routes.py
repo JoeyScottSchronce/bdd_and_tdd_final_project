@@ -101,7 +101,6 @@ def create_products():
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
-
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_products(product_id):
     """This endpoint returns a product based on product id"""
@@ -112,13 +111,22 @@ def get_products(product_id):
     app.logger.info("Returning product: %s", product.name)
     return product.serialize(), status.HTTP_200_OK
 
+
 ######################################################################
 # U P D A T E   A   P R O D U C T
 ######################################################################
-
-#
-# PLACE YOUR CODE TO UPDATE A PRODUCT HERE
-#
+@app.route("/products/<int:product_id>", methods=["PUT"])
+def update_a_product(product_id):
+    """This endpoint updates a product based on the body that is posted"""
+    app.logger.info("Request to Update a product with id [%s]", product_id)
+    check_content_type("application/json")
+    product = Product.find(product_id)
+    if not product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with Product_id '{product_id}' can't be found.")
+    product.deserialize(request.get_json())
+    product.id = product_id
+    product.update()
+    return product.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # D E L E T E   A   P R O D U C T
@@ -127,4 +135,34 @@ def get_products(product_id):
 
 #
 # PLACE YOUR CODE TO DELETE A PRODUCT HERE
+#
+
+
+######################################################################
+# L I S T   B Y   N A M E
+######################################################################
+
+
+#
+# PLACE YOUR CODE HERE
+#
+
+
+######################################################################
+# L I S T   B Y   C A T E G O R Y
+######################################################################
+
+
+#
+# PLACE YOUR CODE HERE
+#
+
+
+######################################################################
+# L I S T   B Y   A V A I L B I L I T Y
+######################################################################
+
+
+#
+# PLACE YOUR CODE HERE
 #
